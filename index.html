@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Chain</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.8.1/dist/cdn.min.js"></script>
+    <script defer src="main.js"></script>
+</head>
+<body x-data="dataObject" class="font-serif relative">
+    <div class="text-lg font-medium text-center p-5 shadow-2xl w-full text-gray-800">
+        <h1 >Start with any word,</h1>
+        <p> Add next word starting with last alphabet of the previous word</p>
+    </div>
+    
+    
+    <div class="w-full px-4 min-h-screen flex flex-col justify-center items-center max-w-2xl mx-auto">  
+        <div>
+            <ul class="flex flex-wrap gap-1 mb-5 list-none">
+                <template x-for="word in list">
+                    <li class="py-2 px-4 bg-gray-50 shadow-xl rounded-lg" x-text="word">
+                    </li>
+                </template>
+            </ul>
+        </div>
+        <div class="flex flex-col justify-center items-center gap-3 w-full max-w-2xl mt-5 mx-auto">
+            <input type="text" placeholder="Enter the next word" spellcheck="true" x-model="newItemName"  @keyup.enter="addItem" class="px-5 py-3 w-full border shadow-2xl rounded-lg"/>
+            <span x-text="list.length + ' Words'"></span>
+            <div class="flex justify-center items-center gap-3">
+                <button @click="addItem" class="px-4 py-2 rounded-lg bg-green-500">Add</button>
+                <button @click="undo" class="px-4 py-2 rounded-lg bg-gray-200">Undo</button>
+                <button @click="restart" class="px-4 py-2 rounded-lg bg-red-500">Restart</button>
+            </div>           
+        </div>
+        <p x-show="error_msg" class="text-red-500 ">This word already exists</p> 
+    </div>    
+</body>
+ <script>
+
+const dataObject = {
+            newItemName: '',
+            list: JSON.parse(localStorage.getItem('mylist') || "[]"),
+            error_msg: false,
+            addItem() {
+                this.newItemName = this.newItemName.trim().toLowerCase();
+              if(!this.newItemName) return;
+                    
+                    if(this.list.length > 0 
+                         && this.newItemName[0] != this.list[this.list.length-1][this.list[this.list.length-1].length-1])
+                    {
+                        return;
+                    }
+                    if(!dictionary.includes(this.newItemName)) return;
+
+                    if(this.list.includes(this.newItemName)) 
+                    { 
+                        this.error_msg = true
+                        return;
+                    } else {
+                        this.error_msg = false
+                    }
+                    
+                    this.list.push(this.newItemName);
+                    localStorage.setItem('mylist',JSON.stringify(this.list));
+                    
+                this.newItemName = '';
+            },
+            undo(){
+                this.list.pop();
+                localStorage.setItem('mylist',JSON.stringify(this.list));
+                //localStorage.removeItem('mylist');
+                console.log('undo clicked');
+            },
+            restart(){
+                this.list=[];
+                localStorage.removeItem('mylist');
+                // localStorage.setItem('mylist',JSON.stringify(this.list));
+            }
+        };
+ </script>    
+</html>
