@@ -76,13 +76,11 @@ const dataObject = {
             undo(){
                 this.list.pop();
                 localStorage.setItem('mylist',JSON.stringify(this.list));
-                //localStorage.removeItem('mylist');
-                console.log('undo clicked');
+                
             },
             restart(){
                 this.list=[];
                 localStorage.removeItem('mylist');
-                // localStorage.setItem('mylist',JSON.stringify(this.list));
             }
         };
  </script>    
